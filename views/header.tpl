@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="//cdn.muicss.com/mui-0.9.28/css/mui.min.css" rel="stylesheet" type="text/css" />
     <link href="static/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="//cdn.muicss.com/mui-0.9.28/js/mui.min.js"></script>
     <title>Daily Python Tip</title>
   </head>
@@ -14,7 +16,7 @@
   <div id="sidebar">
 
     <div class="mui--text-light mui--text-display1 mui--align-vertical">
-      <a href="https://twitter.com/python_tip" target="_blank">
+      <a href="https://twitter.com/{{screen}}" target="_blank">
         <img class="logo" src='https://pbs.twimg.com/profile_images/828169453095510016/X0iDPdDL_400x400.jpg' alt='PyBites'>
       </a>
       <a href="https://pybit.es" target="_blank">

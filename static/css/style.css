@@ -61,3 +61,34 @@ img.logo {
   padding: 10px;
   border-radius: 10px;
 }
+
+.action_div span {
+  margin-left: 8px;
+  padding:1px;
+  display:inline-block;
+  cursor:pointer; 
+  color: #7fb3d5;
+}
+.action_div .action_like.nolike {
+  color: #7fb3d5;  
+}
+.action_div .action_like.uliked{color:red;}
+
+.btl_button {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  padding: 0;
+  margin: 5px 10px 5px 0;
+  text-align: center;
+  line-height: 20px;
+  color: #FFF;
+  background: #00AE68;
+  border-radius: 2px;
+  transition: all 0.2s ;
+}
+input.offset_limit{
+  display:inline-block;
+  line-height: 10px;
+  height:10px;
+}

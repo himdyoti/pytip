@@ -1,6 +1,7 @@
 from os import environ
 import re
 import sys
+import pickle
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -8,6 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from .models import Base, Hashtag, Tip
 
 VALID_TAG = re.compile(r'^[a-z0-9]+$')
+
 
 
 def _create_session():
