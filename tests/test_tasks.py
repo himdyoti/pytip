@@ -1,10 +1,10 @@
 from collections import namedtuple, Counter
 
-from tasks import get_hashtag_counter
+from tasks import twitter_user
 
 tip = namedtuple('Tip', 'text')
 
-
+tw_user = twitter_user()
 def test_get_hashtag_counter():
     blob = '''a lot of tweets with #jupyter hashtags, some #python, more
               #itertools, ah and of course lot of #numpy #NUMpy #NumPY
@@ -17,4 +17,4 @@ def test_get_hashtag_counter():
                         'jupyter': 2,
                         'itertools': 1,
                         'python3': 1})
-    assert get_hashtag_counter(tips) == expected
+    assert tw_user.get_hashtag_counter(tips) == expected

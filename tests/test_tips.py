@@ -1,13 +1,15 @@
 from collections import namedtuple, Counter
 import json
-import os
+import os,sys
 
 import pytest
-
 from tips import (truncate_tables, get_hashtags,
                   add_hashtags, get_tips, add_tips)
-from tasks import import_tweets, import_hashtags
+#from tasks import import_tweets, import_hashtags
+from tasks import twitter_user_actions
 
+
+tw_user = twitter_user_actions()
 tweet = namedtuple('Tweet', 'id text created_at favorite_count retweet_count')
 
 
@@ -29,8 +31,8 @@ def _gen_tweets():
 def db_setup(request):
 
     tweets = list(_gen_tweets())
-    import_tweets(tweets)
-    import_hashtags()
+    tw_user.import_tweets(tweets)
+    tw_user.import_hashtags()
 
     def fin():
         truncate_tables()
@@ -40,17 +42,18 @@ def db_setup(request):
 
 def test_get_tips(db_setup):
     tips = get_tips()
+    print(tips)
     assert len(tips) == 10
-    jupyter_tips = get_tips('jupyter')
+    jupyter_tips = tw_user.get_tips('jupyter')
     assert len(jupyter_tips) == 2
-    numpy_tips = get_tips('numpy')
+    numpy_tips = tw_user.get_tips('numpy')
     assert len(numpy_tips) == 2
 
 
 def test_add_tips(db_setup):
     tweets = list(_gen_tweets())[:2]
     add_tips(tweets)
-    tips = get_tips()
+    tips = tw_user.get_tips()
     assert len(tips) == 12
 
 

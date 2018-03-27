@@ -16,12 +16,11 @@
   <body>
 
 <div id="content" class="mui-container-fluid">
-<div id="myDiv"></div>
+<div id="gDiv"></div>
 </div>
 </html>
 <script type="text/javascript">
 var gdata = {{!graphData}}
-var layout = {title: 'Hover over the point to see text'};
-Plotly.newPlot('myDiv',gdata.data, gdata.layout);
+Plotly.newPlot('gDiv', gdata.data, gdata.layout);
 
 </script>
