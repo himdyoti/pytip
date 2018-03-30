@@ -52,11 +52,25 @@ class twitter_user_actions(twitter_user):
         pass
         #api.favorites
 
-    def call_graph(self,start=0, end=0):
+    def call_graph(self,start=0, end=0, contineous=0):
         """
         creates graph from twitter data where labels are links 
+        https://github.com/plotly/plotlyjs-flask-example
         """
+        def prepare_gdata(*args,**kargs):
+
+            graphs = dict(
+                data = [
+                    dict(kargs)
+                ],
+                layout=dict(
+                        title='hover over to see what is about',
+                        font="size:10")
+            )
+            return json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
+
         end = start + 10 if end == 0 else end
+        interval = end - start
         if start and start <= end:
             patt = re.compile(r'\<|\>|&nbsp;|&gt;|&lt;|\"|\'')
             url_pre = '<a href="https://twitter.com/'+TWITTER_ACCOUNT+'/status/{}" >{}</a>'
@@ -70,24 +84,16 @@ class twitter_user_actions(twitter_user):
                     info.append(patt.sub('',tw.text[0:40]))
                     start = start + 1
                     if start > end:
-                        break
+                        if contineous:
+                            end += interval 
+                            yield prepare_gdata(x=links, y=fav, mode='marker',text=info,type='bar')
+                            fav, links, info = [],[],[]
+                        else:
+                            yield prepare_gdata(x=links, y=fav, mode='marker',text=info,type='bar')
+                            break
 
-            graphs = dict(
-                data = [
-                    dict(
-                        x=links,
-                        y=fav,
-                        mode='marker',
-                        text=info,
-                        type='bar'
-                    ),
 
-                ],
-                    layout=dict(
-                            title='hover over to see what is about',
-                            font="size:10")
-            )
-            return json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
+
 
 
 

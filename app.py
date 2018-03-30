@@ -1,6 +1,6 @@
 import os
 
-from bottle import route, run, request, static_file, view, template
+from bottle import route, run, request, static_file, view, template, response
 from settings import *
 from tips import get_hashtags, get_tips
 from tips.db import session
@@ -45,11 +45,14 @@ def show_graph():
     try:
         start = int(request.query.get('start', 0))
         end = int(request.query.get('end', 0))
-        data = tw_user_action.call_graph(start,end)
-        return { 'graphData':data}
-
+        contineous = int(request.query.get('contineous', 0))
     except ValueError:
         return "integer type cast error"
+    def gen_graph():
+        gdata = tw_user_action.call_graph(start, end, contineous)
+        for data in gdata:
+            yield data
+    return {'gengraph':(gen_graph())}
 
 
 

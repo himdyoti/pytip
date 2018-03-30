@@ -17,6 +17,7 @@
 				
 				start:<input class="offset_limit" id="start_limit" type="text" size="4" value="0">
 				end  :<input class="offset_limit" id="end_limit" type="text" size="4" value="0">
+				<input type="checkbox" name="contineous">progressive
 				<span id="show_graph" class="mui-btn mui-btn--primary">show_graph</span>
 				<!--a href="/show_graph?start=5&end=8" target="_blank">show_graph</a-->
 			</div>
@@ -41,44 +42,47 @@
 <script type="text/javascript">
 
 $(".action_like").click(function(){
-elem = this;
-subclass = $(elem).attr('class').split(/\s+/)[1].trim();
-tw_id = this.id;
-tw_id = tw_id.split(/[_]+/).pop().trim();
-mparam = {id:tw_id};
+	
+	elem = this;
+	subclass = $(elem).attr('class').split(/\s+/)[1].trim();
+	tw_id = this.id;
+	tw_id = tw_id.split(/[_]+/).pop().trim();
+	mparam = {id:tw_id};
 
-$.ajax({
-url:'/like_a_post?action='+subclass,
-data: mparam,
-type:'post',
-dataType:'json',
-crossDomain:true,
-success:function(json){
-	console.log(json);
-	if(json["favorited"]){
-		$(elem).removeClass(subclass).addClass('uliked') ;
-	}
-	else{
-		$(elem).removeClass(subclass).addClass('nolike');
-	}
-    
-},
-error:function( jqXHR, textStatus ) {
-    alert( "Triggered fail callback: " + textStatus );
-}
-});
+	$.ajax({
+		url:'/like_a_post?action='+subclass,
+		data: mparam,
+		type:'post',
+		dataType:'json',
+		crossDomain:true,
+		success:function(json){
+			console.log(json);
+			if(json["favorited"]){
+				$(elem).removeClass(subclass).addClass('uliked') ;
+			}
+			else{
+				$(elem).removeClass(subclass).addClass('nolike');
+			}
+		    
+		},
+		error:function( jqXHR, textStatus ) {
+		    alert( "Triggered fail callback: " + textStatus );
+		}
+	});
 });
 
 
 $("#show_graph").click(function(e){
-startlimit =  $("#start_limit").val();
-endlimit = $("#end_limit").val();
-var link = document.createElement('a');
-$(link).attr('target', '_blank');
-url='/show_graph?start='+startlimit+'&end='+endlimit
-link.href = url;
-document.body.appendChild(link);
-link.click(); 
 
+	startlimit =  $("#start_limit").val();
+	endlimit = $("#end_limit").val();
+	contineous = $('input[name="contineous"]').is(':checked') ? 1:0 ;
+
+	var link = document.createElement('a');
+	$(link).attr('target', '_blank');
+	url='/show_graph?start='+startlimit+'&end='+endlimit+'&contineous='+contineous
+	link.href = url;
+	document.body.appendChild(link);
+	link.click(); 
 });
 </script>
