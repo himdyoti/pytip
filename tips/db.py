@@ -67,3 +67,6 @@ def add_tips(tweets):
                         likes=tw.favorite_count,
                         retweets=tw.retweet_count))
     session.commit()
+
+def get_tips_count():
+    return session.query(Tip).count()

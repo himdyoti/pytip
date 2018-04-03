@@ -14,6 +14,7 @@ from plotly.graph_objs import *
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from .import_tweets import twitter_user
 from settings import *
+from tips import get_tips_count
 
 class twitter_user_actions(twitter_user):
     """
@@ -52,30 +53,53 @@ class twitter_user_actions(twitter_user):
         pass
         #api.favorites
 
+
+class Pagination:
+    def __init__(self):
+        self.page_size = 20
+        self.total_records = get_tips_count()
+        self.page_data = namedtuple('page_data','tpages remainder psize') 
+
+    def get_pages(self):
+        "pagination for tips graph"
+        tpages, remainder = divmod(self.total_records, 20 ) if self.total_records > self.page_size else (1,0)
+        return self.page_data(tpages=tpages, remainder=remainder, psize=self.page_size)
+
+    def set_page_size(self,page_size):
+        self.page_size = page_size
+
+
+
+class Graph:
+    def __init__(self,tw_user):
+        self.user = tw_user
+
+    @staticmethod
+    def prepare_gdata(*args,**kargs):
+        graphs = dict(
+            data = [
+                dict(kargs)
+            ],
+            layout=dict(
+                    title='hover over to see what is about',
+                    font="size:10")
+        )
+        return json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
+
+
     def call_graph(self,start=0, end=0, contineous=0):
         """
         creates graph from twitter data where labels are links 
         https://github.com/plotly/plotlyjs-flask-example
         """
-        def prepare_gdata(*args,**kargs):
-
-            graphs = dict(
-                data = [
-                    dict(kargs)
-                ],
-                layout=dict(
-                        title='hover over to see what is about',
-                        font="size:10")
-            )
-            return json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
 
         end = start + 10 if end == 0 else end
-        interval = end - start
+        interval = end - start + 1
         if start and start <= end:
             patt = re.compile(r'\<|\>|&nbsp;|&gt;|&lt;|\"|\'')
             url_pre = '<a href="https://twitter.com/'+TWITTER_ACCOUNT+'/status/{}" >{}</a>'
             fav, links, info = [],[],[]
-            tweets = self.get_tweets()
+            tweets = self.user.get_tweets()
             for i,tw in enumerate(tweets.items(200), 1):
                 if (start <= i <= end):
                     fav.append(tw.favorite_count)
@@ -86,10 +110,10 @@ class twitter_user_actions(twitter_user):
                     if start > end:
                         if contineous:
                             end += interval 
-                            yield prepare_gdata(x=links, y=fav, mode='marker',text=info,type='bar')
+                            yield Graph.prepare_gdata(x=links, y=fav, mode='marker',text=info,type='bar')
                             fav, links, info = [],[],[]
                         else:
-                            yield prepare_gdata(x=links, y=fav, mode='marker',text=info,type='bar')
+                            yield Graph.prepare_gdata(x=links, y=fav, mode='marker',text=info,type='bar')
                             break
 
 

@@ -16,13 +16,24 @@
   <body>
 
 <div id="content" class="mui-container-fluid" style="margin-left:0px;">
-<div id="gDiv" class="tabs">
-	<ul class="tab-links">
+	<div id="gDiv" class="tabs">
+		<ul class="tab-links">
 
-	</ul>
-<div class="tab-content"></div>
+		</ul>
+		<div class="tab-content"></div>
+	</div>
+
+	<div id="pagination">
+		% pages, remainder, psize = pagination
+		% for indx, ipage in enumerate(range(0,pages*psize,psize),1):
+		%start, end = ipage, ipage+20
+			<span href="db_url?start={{start}}&end={{end}}">{{indx}}</span>
+		% end
+		% if remainder > 0:
+			<span href="db_url?start={{end}}&end={{end+remainder}}">{{indx+1}}</span> 
+	</div>
 </div>
-</div>
+
 </html>
 <script type="text/javascript">
 % for i,gdata in enumerate(gengraph,1):
@@ -41,9 +52,7 @@
 jQuery(document).ready(function() {
 jQuery('.tabs .tab-links a').on('click', function(e)  {
 var currentAttrValue = jQuery(this).attr('href');
-// Show/Hide Tabs
 jQuery('.tabs ' + currentAttrValue).show().siblings().hide();
-// Change/remove current tab to active
 jQuery(this).parent('li').addClass('active').siblings().removeClass('active');
 e.preventDefault();
 });

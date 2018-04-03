@@ -1,5 +1,4 @@
 import os
-
 from bottle import route, run, request, static_file, view, template, response
 from settings import *
 from tips import get_hashtags, get_tips
@@ -39,20 +38,29 @@ def like_a_post():
         json_data = tw_user_action.like_post(tid) if action == 'nolike' else tw_user_action.unlike_post(tid)
         return json_data
 
+
 @route('/show_graph')
 @view('graph')
 def show_graph():
+    """
+    when progressive (start, end) inclusive becomes the interval size
+    for eg. (1,10)=10 OR  (1-5)=5 OR (6-10)=5
+    """
     try:
         start = int(request.query.get('start', 0))
         end = int(request.query.get('end', 0))
         contineous = int(request.query.get('contineous', 0))
     except ValueError:
         return "integer type cast error"
+
+    pageObj = Pagination()
+
     def gen_graph():
-        gdata = tw_user_action.call_graph(start, end, contineous)
+        tgraph = Graph(tw_user_action)
+        gdata = tgraph.call_graph(start, end, contineous)
         for data in gdata:
             yield data
-    return {'gengraph':(gen_graph())}
+    return {'gengraph':(gen_graph()), 'pagination':pageObj.get_pages()}
 
 
 
