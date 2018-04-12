@@ -23,14 +23,12 @@
 		<div class="tab-content"></div>
 	</div>
 
-	<div id="pagination">
-		% pages, remainder, psize = pagination
-		% for indx, ipage in enumerate(range(0,pages*psize,psize),1):
-		%start, end = ipage, ipage+20
-			<span href="db_url?start={{start}}&end={{end}}">{{indx}}</span>
-		% end
-		% if remainder > 0:
-			<span href="db_url?start={{end}}&end={{end+remainder}}">{{indx+1}}</span> 
+	<div id="pagination" style="text-align:right;">
+    % if pagination is not None:
+    % for page in pagination:
+    	{{!page}}
+    % end
+    % end
 	</div>
 </div>
 

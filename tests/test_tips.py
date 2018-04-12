@@ -42,7 +42,6 @@ def db_setup(request):
 
 def test_get_tips(db_setup):
     tips = get_tips()
-    print(tips)
     assert len(tips) == 10
     jupyter_tips = tw_user.get_tips('jupyter')
     assert len(jupyter_tips) == 2

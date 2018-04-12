@@ -13,12 +13,15 @@ def send_static(filename):
 
 
 @route('/')
+@route('/home')
 @route('/<tag>')
 @view('index')
 def index(tag=None):
     tag = tag or request.query.get('tag') or None
+    pageno = request.query.get('page', 1)
+    offset, limit = tw_user_action.pagination.get_page_range(pageno)
     tags = get_hashtags()
-    tips = get_tips(tag)
+    tips = get_tips(tag, offset=offset, limit=limit)
     likes = tw_user_action.get_favorites()
     likes = [like.id for like in likes.items(200)]
     
@@ -27,8 +30,10 @@ def index(tag=None):
             'tags': tags,
             'tips': tips,
             'likes': likes,
+            'pagination': tw_user_action.pagination.get_html_pagination(pageno),
             'screen': TWITTER_ACCOUNT
             }
+
 
 @route('/like_a_post', method='POST')
 def like_a_post():
@@ -43,24 +48,34 @@ def like_a_post():
 @view('graph')
 def show_graph():
     """
-    when progressive (start, end) inclusive becomes the interval size
+    when progressive (offset, limit) inclusive becomes the interval size
     for eg. (1,10)=10 OR  (1-5)=5 OR (6-10)=5
     """
+
     try:
         start = int(request.query.get('start', 0))
         end = int(request.query.get('end', 0))
         contineous = int(request.query.get('contineous', 0))
+
     except ValueError:
         return "integer type cast error"
 
-    pageObj = Pagination()
+    tgraph = Graph(tw_user_action)
+    pageno = request.query.get('page', 1)
+    url = 'show_graph?start={}&end={}'.format(start,end)
+    offset, limit = tgraph.pagination.get_page_range(pageno)
+    html_pagination = tgraph.pagination.get_html_pagination(pageno,url=url) if config_pagination else None
 
     def gen_graph():
-        tgraph = Graph(tw_user_action)
-        gdata = tgraph.call_graph(start, end, contineous)
+        """pagiantion = true in global settings can be used (if/else)"""
+        if config_pagination:
+            gdata = tgraph.call_graph(offset=offset, limit=limit)
+        else:
+            gdata = tgraph.call_graph(start=start, end=end, contineous=contineous)
+
         for data in gdata:
             yield data
-    return {'gengraph':(gen_graph()), 'pagination':pageObj.get_pages()}
+    return {'gengraph':(gen_graph()), 'pagination':html_pagination}
 
 
 

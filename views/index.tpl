@@ -34,6 +34,13 @@
 
 		</div>
 	</div>
+	<div id="pagination" style="text-align:right;">
+	% if pagination is not None:
+		% for page in pagination:
+			{{!page}}
+		% end
+	% end
+	</div>
 
 </div>
 

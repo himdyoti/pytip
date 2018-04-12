@@ -46,7 +46,9 @@ def add_hashtags(hashtags_cnt):
     session.commit()
 
 
-def get_tips(tag=None):
+def get_tips( tag=None, **kargs):
+    offset = kargs.get('offset',0)
+    limit = kargs.get('limit',30)
     if tag is not None and VALID_TAG.match(tag.lower()):
         filter_ = "%{}%".format(tag.lower())
         tips = session.query(Tip)
@@ -55,6 +57,8 @@ def get_tips(tag=None):
         tips = session.query(Tip)
 
     tips = tips.order_by(Tip.likes.desc())
+    if offset >=0 and limit:
+        tips = tips.offset(offset).limit(limit)
     return tips.all()
 
 

@@ -7,7 +7,7 @@ import tweepy
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from tips import add_tips, truncate_tables, get_tips, add_hashtags
+from tips import add_tips, truncate_tables, get_tips, add_hashtags, get_tips_count
 from settings import *
 
 class twitter_user(User):
@@ -15,6 +15,7 @@ class twitter_user(User):
     def __init__(self):
         super(twitter_user,self).__init__(name='xxx', paswd='yyy')
         self.api = self.get_api()
+        self.pagination = Pagination(page_size=30, total_records=get_tips_count(), url='home')
 
     def get_tweets(self,screen_name=TWITTER_ACCOUNT):
         #api = _get_twitter_api_session()
