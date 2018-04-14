@@ -26,10 +26,10 @@ def apply_pagination(fn):
             assert 'start' in kargs.keys(), "start arg not provided"
             assert kargs['start'] > 0 ,"start value must be greater then 0"
             start, end = kargs['start'], kargs.get('end',0)
-            assert start <= end, "start must be >= end"
+            assert start <= end, "start must be <= end"
             end = start + 10 if end == 0 else end
             interval = end - start + 1
-            assert interval > 10, "interval must be >= 10"
+            assert interval >= 10, "interval must be >= 10"
         else:
             assert all(map( lambda k: k in kargs.keys(), ['offset','limit'])), "offset, limit missing from args"
             assert kargs['offset'] >=0 and kargs['limit'] > 0, "valid offset and limit required for pagination"
