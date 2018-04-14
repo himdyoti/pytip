@@ -21,17 +21,22 @@ from tips import add_tips, truncate_tables, get_tips, add_hashtags, get_tips_cou
 def apply_pagination(fn):
 
     def p_wrapper(clobj, **kargs):
-        if kargs.get('start') and kargs.get('end'):
-            start, end = kargs['start'], kargs['end']
-            assert start and start <= end, "invalid start amd end"
+
+        if not config_pagination:
+            assert 'start' in kargs.keys(), "start arg not provided"
+            assert kargs['start'] > 0 ,"start value must be greater then 0"
+            start, end = kargs['start'], kargs.get('end',0)
+            assert start <= end, "start must be >= end"
             end = start + 10 if end == 0 else end
             interval = end - start + 1
-
-        if (kargs.get('offset') or kargs.get('offset')==0) and kargs.get('limit'):
+            assert interval > 10, "interval must be >= 10"
+        else:
+            assert all(map( lambda k: k in kargs.keys(), ['offset','limit'])), "offset, limit missing from args"
+            assert kargs['offset'] >=0 and kargs['limit'] > 0, "valid offset and limit required for pagination"
             offset, limit = kargs['offset'], kargs['limit']
             start, end, interval = 1, limit, 0
-        kargs.update(start=start, end=end, interval=interval)
 
+        kargs.update(start=start, end=end, interval=interval)
         return fn(clobj, **kargs)
     return p_wrapper
 
