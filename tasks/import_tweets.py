@@ -15,7 +15,10 @@ class twitter_user(User):
     def __init__(self):
         super(twitter_user,self).__init__(name='xxx', paswd='yyy')
         self.api = self.get_api()
-        self.pagination = Pagination(page_size=30, total_records=get_tips_count(), url='home')
+        try:
+            self.pagination = Pagination(page_size=30, total_records=get_tips_count(), url='home')
+        except:
+            pass
 
     def get_tweets(self,screen_name=TWITTER_ACCOUNT):
         #api = _get_twitter_api_session()
