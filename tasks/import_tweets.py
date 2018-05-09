@@ -17,8 +17,8 @@ class twitter_user(User):
         self.api = self.get_api()
         try:
             self.pagination = Pagination(page_size=30, total_records=get_tips_count(), url='home')
-        except:
-            pass
+        except e:
+            print(e)
 
     def get_tweets(self,screen_name=TWITTER_ACCOUNT):
         #api = _get_twitter_api_session()
