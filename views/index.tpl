@@ -13,14 +13,8 @@
 					% end
 				</h1>
 			</div>
-			<div class="extras">
-				
-				start:<input class="offset_limit" id="start_limit" type="text" size="4" value="0">
-				end  :<input class="offset_limit" id="end_limit" type="text" size="4" value="0">
-				<input type="checkbox" name="contineous">progressive
-				<span id="show_graph" class="mui-btn mui-btn--primary">show_graph</span>
-				<!--a href="/show_graph?start=5&end=8" target="_blank">show_graph</a-->
-			</div>
+			<button class="mui-btn mui-btn--primary" onclick="activateModal()">bar chart</button>
+
 			<div class="mui-divider"></div>
 			% for tip in tips:
 				<div class='tip'>
@@ -34,14 +28,6 @@
 
 		</div>
 	</div>
-	<div id="pagination" style="text-align:right;">
-	% if pagination is not None:
-		% for page in pagination:
-			{{!page}}
-		% end
-	% end
-	</div>
-
 </div>
 
 % include('footer.tpl')
@@ -78,8 +64,33 @@ $(".action_like").click(function(){
 	});
 });
 
+  function activateModal() {
+    // initialize modal element
+	var $modalEl = $('<div>');
+    // set style
+    $modalEl.css({
+      width: 400,
+      height: 200,
+      margin: '100px auto',
+      backgroundColor: '#fff',
 
-$("#show_graph").click(function(e){
+    });
+
+    // add content
+    var $formEl = '<form style="padding:15px;">';
+    $formEl += '<p><label for="start_limit">start/range1:  </label><input type="text" id="start_limit" value="0"></p>';
+    $formEl += '<p><label for="end_limit">end/range2:  </label><input type="text" id="end_limit" value="0"></p>';
+    $formEl += '<p><label for="cont">contineous:  </label><input type="checkbox" name="contineous" id="cont"></p>';
+    $formEl += '<p><span id="show_graph" class="mui-btn mui-btn--primary mui-btn--small" onclick="showGraph()">show_graph</span></p>';
+    $formEl +='</form>';
+    $modalEl.append($formEl);
+
+    // show modal
+    mui.overlay('on', $modalEl.get(0));
+  }
+
+
+function showGraph(){
 
 	startlimit =  $("#start_limit").val();
 	endlimit = $("#end_limit").val();
@@ -90,6 +101,7 @@ $("#show_graph").click(function(e){
 	url='/show_graph?start='+startlimit+'&end='+endlimit+'&contineous='+contineous
 	link.href = url;
 	document.body.appendChild(link);
-	link.click(); 
-});
+	link.click();
+	mui.overlay('off', $modalEl) 
+}
 </script>

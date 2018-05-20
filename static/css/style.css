@@ -62,6 +62,29 @@ img.logo {
   border-radius: 10px;
 }
 
+/**
+ * Footer CSS
+ */
+footer {
+  box-sizing: border-box;
+  height: 60px;
+  background-color: #eee;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 25px;
+}
+
+ #sidedrawer {
+   position: fixed;
+   top: 0;
+   bottom: 0;
+   width: 200px;
+   left: -200px;
+   overflow: auto;
+   z-index: 2;
+   background-color: #fff;
+   transition: transform 0.2s;
+ }
+
 .action_div span {
   margin-left: 8px;
   padding:1px;
@@ -145,4 +168,29 @@ display:none;
 .tab.active {
 display:block;
 }
+
+/* pagination style ---  http://www-db.deis.unibo.it/courses/TW/DOCS/w3schools/css/css3_pagination.asp.html*/
+ul#pagination {
+    display: inline-block;
+    padding-bottom: 20px;
+    margin: 0;
+    float:right;
+}
+
+ul#pagination li {display: inline;}
+
+ul#pagination li .page_no {
+    color: black;
+    float: left;
+    padding: 4px 8px;
+    text-decoration: none;
+    border: 1px solid #ddd; /* Gray */
+    transition: background-color .3s;
+}
+ul#pagination li span {
+    background-color: #4CAF50;
+    color: white;
+}
+
+
 
